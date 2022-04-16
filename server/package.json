@@ -7,7 +7,6 @@
     "start": "node dist/server.js",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc --project .",
-    "build-prod": "cd client && npm install && npm run build && cd .. && npm install && npm run build",
     "server": "nodemon -r dotenv/config --verbose --watch \"server\" --ext \"ts,json\" --exec ts-node server/server.ts",
     "client": "cd client && npm start && cd ..",
     "dev": "concurrently \"npm run client\" \"npm run server\"",
