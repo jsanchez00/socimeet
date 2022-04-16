@@ -7,11 +7,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     age: {
-        type: Number, 
+        type: Number,
         required: true
     },
     email: {
-        type: String, 
+        type: String,
         required: true
     }
 });

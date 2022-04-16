@@ -14,12 +14,12 @@ app.use(express.static("../client/build"));
 app.use("/api", userRoutes);
 
 mongoose.connect(
-  <string>process.env.MONGODB_URI
+  process.env.MONGODB_URI as string
 )
 .then(() => console.log("connected to mongodb"))
 .catch((e: Error) => console.error(e.message));
 
-app.listen(port, function () {
+app.listen(port, () => {
   console.log(`Server listening on ${port}`);
 });
 

@@ -5,7 +5,7 @@ export const router = express.Router();
 
 const PATH = "/users";
 
-// create user 
+// create user
 router.post(PATH, (req, res) => {
     const user = new userModel(req.body);
     user
