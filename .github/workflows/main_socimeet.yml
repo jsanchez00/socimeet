@@ -29,6 +29,7 @@ jobs:
         with:
           name: node-app
           path: dist
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
   deploy:
     runs-on: ubuntu-latest
