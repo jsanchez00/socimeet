@@ -35,8 +35,10 @@
     "dev": "concurrently \"npm run client\" \"npm run server\"",
     "server": "nodemon -r dotenv/config --verbose --watch \"server\" --ext \"ts,json\" --exec ts-node server/server.ts",
     "client": "cd client && npm start && cd ..",
+    "prebuild-prod": "rm -rf dist",
     "build-prod": "cd client && npm install && npm run build && cd .. && npm install && npm run build",
-    "build": "tsc --project .",
+    "build": "tsc --project . && npm run cp:client",
+    "cp:client": "npx mkdirp dist/client/build && npx ncp client/build dist/client/build",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "start": "node -r dotenv/config dist/server.js"
   },
