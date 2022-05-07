@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { loginUser } from "../../application/commands/login";
 import { signUp } from "../../application/commands/sign-up";
 import './SignUp.css';
 
@@ -10,12 +9,14 @@ export default function SignUp() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    signUp(
-      username,
-      password
-    ).then(r => {
-      console.log("Sign UP done")
-    });
+    if(repeatPassword === password){
+      signUp(
+        username,
+        password
+      ).then(r => {
+        console.log("Sign UP done")
+      });
+    }
   }
 
   return(

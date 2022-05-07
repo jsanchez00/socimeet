@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from "../login/Login";
 import Shell from "../shell/Shell";
+import SignUp from '../sign-up/SignUp';
 import './App.css';
 import useToken from "./use-token";
-import SignUp from '../sign-up/SignUp';
 
 function App() {
   const { token, setToken } = useToken();
   const path = window.location.pathname;
-  if(!token && path != "/signup"){
+  if(!token && path !== "/signup"){
     return (<Login setToken={setToken} />);
   }
 

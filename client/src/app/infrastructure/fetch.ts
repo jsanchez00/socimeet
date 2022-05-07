@@ -4,7 +4,7 @@ interface IOptions {
     headers?: any;
 }
 
-const isPostMethod = (opt: IOptions) => opt.method == "POST";
+const isPostMethod = (opt: IOptions) => opt.method === "POST";
 
 export const customFetch = (path: string, options: IOptions) => 
     fetch(`/api/${path}`, {
