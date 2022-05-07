@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 import passport from "passport";
-import {Strategy as LocalStrategy} from "passport-local"; 
+import {Strategy as LocalStrategy} from "passport-local";
 import { userModel } from "../models/user";
 
 passport.use("local-signup", new LocalStrategy({
@@ -33,7 +33,7 @@ passport.use("local-login", new LocalStrategy({
 }, async (email, password, done) => {
     try {
         const user = await userModel.findOne({
-            email: email
+            email
         });
         if (!user) return done(null, false);
         const isMatch = await user.matchPassword(password);
