@@ -28,8 +28,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'SociMeet2'
+          app-name: 'SociMeet'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FA8A102E30BA4369A36CD92C0451A4A8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23B70143FB0D43C182197AB3F8C83EB4 }}
 
   
