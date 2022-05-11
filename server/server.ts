@@ -10,13 +10,15 @@ const port = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 app.use('/api', userRoutes);
-let MONGODB_URI = `mongodb://localhost:27017`;
+let MONGODB_URI = `mongodb://0.0.0.0:27017`;
 
 if (process.env.C_ENV === 'P') {
   const mongoPassword = '12345';
   const config = JSON.parse(process.env.APP_CONFIG);
   MONGODB_URI = 'mongodb://' + config.mongo.user + ':' + encodeURIComponent(mongoPassword) + '@' + config.mongo.hostString;
 }
+
+console.log(MONGODB_URI);
 
 mongoose
   .connect(MONGODB_URI as string)
