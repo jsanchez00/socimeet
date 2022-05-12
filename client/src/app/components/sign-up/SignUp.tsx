@@ -5,6 +5,8 @@ import './SignUp.css';
 import { isValidRequiredField } from '../../domain/utils';
 import Button from "@mui/material/Button";
 import useToken from "../app/use-token";
+import { notificationSystem } from '../../application/commands/notification-system';
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function SignUp() {
   const { token, setToken } = useToken();
@@ -15,6 +17,7 @@ export default function SignUp() {
   const [validPassword, setValidPassword] = useState<boolean>(true);
   const [validUsername, setValidUsername] = useState<boolean>(true);
   const [validRepeatPassword, setValidRepeatPassword] = useState<boolean>(true);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const navigateToLogin = (e: any) => {
     window.location.href = "/";
@@ -25,13 +28,17 @@ export default function SignUp() {
     validPasswordHandler();
     setValidUsername(isValidRequiredField(username as any));
     if(repeatPassword === password && username){
+      setIsFetching(true);
       signUp(
         username,
         password
       ).then(r => {
+        notificationSystem.success("Enhorabona, alta realitzada correctament");
         setToken(r.token);
         navigateToLogin(null);
-      });
+      })
+      .catch(e => notificationSystem.error("Usuari ja registrat"))
+      .finally(() => setIsFetching(false));
     }
   }
 
@@ -50,7 +57,7 @@ export default function SignUp() {
     }
   }
 
-  return(
+  return !isFetching ?(
     <div className="signup-wrapper">
       <h1>Registre</h1>
       <TextField 
@@ -83,11 +90,14 @@ export default function SignUp() {
         onBlur={e => validPasswordHandler()}
         type="password" 
         onChange={e => setRepeatPassword(e.target.value)}>
-          
         </TextField>
         <Button onClick={signHandler}>Registrar-se</Button>
-        <Button onClick={navigateToLogin}>Tornar</Button>
+        <Button href="/">Tornar</Button>
       
+    </div>
+  ): (
+    <div className="progress-container">
+      <CircularProgress className="progress" thickness={1} size="80" />    
     </div>
   )
 }

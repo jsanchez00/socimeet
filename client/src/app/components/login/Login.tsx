@@ -1,10 +1,12 @@
 import Button from '@mui/material/Button';
+import CircularProgress from "@mui/material/CircularProgress";
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import { useState } from "react";
 import { loginUser } from "../../application/commands/login";
-import './Login.css';
+import { notificationSystem } from "../../application/commands/notification-system";
 import { isValidRequiredField } from '../../domain/utils';
+import './Login.css';
 
 interface IProps {
   setToken: any
@@ -17,9 +19,7 @@ export default function Login(props: IProps) {
   const [validPassword, setValidPassword] = useState<boolean>(true);
   const [validUsername, setValidUsername] = useState<boolean>(true);
 
-  const navigateToSignUp = (e: any) => {
-    window.location.href = "/signup";
-  }
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -28,14 +28,19 @@ export default function Login(props: IProps) {
     
       
     if(password && username){
+      setIsFetching(true);
       loginUser({
         password,
         email: username
-      }).then(res => props.setToken(res.token));
+      }).then(res => props.setToken(res.token))
+      .catch(e => {
+        notificationSystem.error("Dades incorrectes")
+      })
+      .finally(() => setIsFetching(false));
     }
   }
 
-  return(
+  return !isFetching ? (
     <div className="login-wrapper">
       <h1>Login</h1>
       <TextField 
@@ -46,7 +51,6 @@ export default function Login(props: IProps) {
         error={!validUsername}
         onBlur={e => setValidUsername(isValidRequiredField(e.target.value))}
         onChange={e => setUserName(e.target.value)}>
-
         </TextField>
       <TextField 
         id="password-input" 
@@ -60,8 +64,11 @@ export default function Login(props: IProps) {
           
         </TextField>
       <Button onClick={e => handleSubmit(e)}>Entrar</Button>
-      <Button onClick={e => navigateToSignUp(e)}>Registrar-se</Button>
+      <Button href="/signup" >Registrar-se</Button>
     </div>
+  )
+  : (
+    <CircularProgress className="progress" thickness={1} size="80" />    
   )
 }
 

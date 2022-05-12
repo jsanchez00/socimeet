@@ -5,6 +5,7 @@ import App from './app/components/app/App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { Toaster } from "react-hot-toast";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,7 +19,7 @@ root.render(
       />
       <App />
     </Provider>
-    
+    <Toaster />
   </React.StrictMode>
 );
 

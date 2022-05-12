@@ -1,15 +1,18 @@
-import { CaseReducer, createSlice } from '@reduxjs/toolkit'
-import { IUserInfoState } from "../domain"
+import { CaseReducer, createSlice } from '@reduxjs/toolkit';
+import { IUserInfoState } from '../domain';
 
 const initialState = {
-    email: "",
-    name: ""
+  email: '',
+  name: '',
 };
 
-export const userInfoSlice = createSlice<IUserInfoState, {
-    ["update"]: CaseReducer<IUserInfoState, any>,
-    ["reset"]: CaseReducer<IUserInfoState>,
-}>({
+export const userInfoSlice = createSlice<
+  IUserInfoState,
+  {
+    ['update']: CaseReducer<IUserInfoState, any>;
+    ['reset']: CaseReducer<IUserInfoState>;
+  }
+>({
   name: 'userInfo',
   initialState,
   reducers: {
@@ -19,14 +22,16 @@ export const userInfoSlice = createSlice<IUserInfoState, {
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state = action.payload;
+      return state;
     },
     reset: (state) => {
-        state = initialState;
-    }
+      state = initialState;
+      return state;
+    },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { reset, update } = userInfoSlice.actions
+export const { reset, update } = userInfoSlice.actions;
 
-export default userInfoSlice.reducer
+export default userInfoSlice.reducer;
