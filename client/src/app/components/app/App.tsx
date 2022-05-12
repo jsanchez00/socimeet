@@ -5,11 +5,15 @@ import SignUp from '../sign-up/SignUp';
 import './App.css';
 import useToken from "./use-token";
 
+
 function App() {
   const { token, setToken } = useToken();
   const path = window.location.pathname;
+
   if(!token && path !== "/signup"){
-    return (<Login setToken={setToken} />);
+    return (
+        <Login setToken={setToken} />
+    );
   }
 
   return (
@@ -17,7 +21,7 @@ function App() {
       <h1>Socimeet</h1>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Shell />}></Route>
+          <Route path="/*" element={<Shell setToken={setToken} />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
         </Routes>
       </BrowserRouter>
