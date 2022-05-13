@@ -1,16 +1,17 @@
 import { CaseReducer, createSlice } from '@reduxjs/toolkit';
-import { IUserInfoState } from '../domain';
+import { IUserInfo } from '../../interfaces/user';
 
 const initialState = {
+  id: '',
   email: '',
-  name: '',
+  password: '',
 };
 
 export const userInfoSlice = createSlice<
-  IUserInfoState,
+  IUserInfo,
   {
-    ['update']: CaseReducer<IUserInfoState, any>;
-    ['reset']: CaseReducer<IUserInfoState>;
+    ['update']: CaseReducer<IUserInfo, any>;
+    ['reset']: CaseReducer<IUserInfo>;
   }
 >({
   name: 'userInfo',

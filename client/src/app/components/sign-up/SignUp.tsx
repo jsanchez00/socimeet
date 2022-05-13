@@ -34,6 +34,7 @@ export default function SignUp() {
         password
       ).then(r => {
         notificationSystem.success("Enhorabona, alta realitzada correctament");
+        sessionStorage.setItem('email', r.user.email);
         setToken(r.token);
         navigateToLogin(null);
       })
@@ -91,8 +92,8 @@ export default function SignUp() {
         type="password" 
         onChange={e => setRepeatPassword(e.target.value)}>
         </TextField>
-        <Button onClick={signHandler}>Registrar-se</Button>
-        <Button href="/">Tornar</Button>
+        <Button variant="contained" onClick={signHandler}>Registrar-se</Button>
+        <Button variant="outlined" href="/">Tornar</Button>
       
     </div>
   ): (

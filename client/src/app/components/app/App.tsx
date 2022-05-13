@@ -18,7 +18,6 @@ function App() {
 
   return (
     <div className="wrapper">
-      <h1>Socimeet</h1>
       <BrowserRouter>
         <Routes>
           <Route path="/*" element={<Shell setToken={setToken} />}></Route>

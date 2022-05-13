@@ -21,7 +21,7 @@
     "nodemon": "^2.0.15",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
-    "ramda": "0.26.1",
+    "ramda": "^0.28.0",
     "react-hot-toast": "^2.2.0",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",

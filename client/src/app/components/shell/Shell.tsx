@@ -1,18 +1,19 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import PropTypes from 'prop-types';
-import { useState } from "react";
-import { Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { fetchUserInfo } from '../../application/commands/fetch-user-info';
+import { userInfoSelector } from '../../application/queries/user-info-selector';
 import Profile from '../profile/Profile';
 import './Shell.css';
-import { useNavigate } from 'react-router-dom';
-
+import GroupsIcon from '@mui/icons-material/Groups';
 
 interface IProps {
   setToken: any;
@@ -22,6 +23,15 @@ export default function Shell(props: IProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [navTitle, setNavTitle] = useState<string>("Social");
 
+  const userInfo = useSelector(userInfoSelector);
+
+  useEffect(() => {
+    if(!userInfo.email){
+      const email: any = sessionStorage.getItem('email');
+      fetchUserInfo(email);
+    }
+  }, []);
+
   const navigate = useNavigate()
 
   const path = window.location.pathname;
@@ -29,17 +39,26 @@ export default function Shell(props: IProps) {
   if(path == "/profile" && navTitle !== "Perfil"){
     setNavTitle("Perfil");
   }
+  else if(path == "/social" && navTitle !== "Social"){
+    setNavTitle("Social");
+  }
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const navigateToProfile = (e: any) => {
     navigate("/profile");
+    setAnchorEl(null);
   }
 
   const handleLogout = () => {
     props.setToken('');
+    sessionStorage.setItem('email', "");
     window.location.href = "/";
   };
 
@@ -52,6 +71,17 @@ export default function Shell(props: IProps) {
         </Typography>
 
         <div>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={e=> navigate("social")}
+              color="inherit"
+            >
+              <GroupsIcon/>
+            </IconButton>
+          
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -75,6 +105,7 @@ export default function Shell(props: IProps) {
                 horizontal: 'right',
               }}
               open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
               <MenuItem onClick={navigateToProfile}>Perfil</MenuItem>
               <MenuItem  onClick={handleLogout}>Desconectar</MenuItem>
@@ -82,9 +113,11 @@ export default function Shell(props: IProps) {
         </div>
         </Toolbar>
       </AppBar>
-      <Routes>
-        <Route path="profile" element={<Profile />}></Route>
-      </Routes> 
+      <div className="shell-container">
+        <Routes>
+          <Route path="profile" element={<Profile />}></Route>
+        </Routes> 
+      </div>
     </div>
   )
 }

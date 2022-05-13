@@ -1,5 +1,14 @@
 .shell-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  height: 100vh;
+}
+
+.shell-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 1px;
+  margin-top: 64px;
+  padding: 24px;
 }
