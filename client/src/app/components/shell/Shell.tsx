@@ -14,6 +14,7 @@ import { userInfoSelector } from '../../application/queries/user-info-selector';
 import Profile from '../profile/Profile';
 import './Shell.css';
 import GroupsIcon from '@mui/icons-material/Groups';
+import SocialShell from '../../../social/components/shell/Social-shell';
 
 interface IProps {
   setToken: any;
@@ -116,6 +117,7 @@ export default function Shell(props: IProps) {
       <div className="shell-container">
         <Routes>
           <Route path="profile" element={<Profile />}></Route>
+          <Route path="social/*" element={<SocialShell />}></Route>
         </Routes> 
       </div>
     </div>

@@ -1,0 +1,20 @@
+.icon-button {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    color: #333;
+}
+
+.icon-button:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+.actions {
+    align-self: flex-end;
+}
+
+.icon-button span {
+    text-align: center;
+}

@@ -1,11 +1,11 @@
 import { Button, CircularProgress } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import { lensProp, set } from "ramda";
+import { useState } from 'react';
 import { useSelector } from "react-redux";
 import { updateUserInfo } from '../../application/commands/update-user-info';
 import { userInfoSelector } from "../../application/queries/user-info-selector";
 import './Profile.css';
-import { useState, useEffect } from 'react';
-import { lensProp, set } from "ramda";
 
 
 export default function Profile() {
