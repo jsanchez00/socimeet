@@ -32,7 +32,10 @@ export default function Login(props: IProps) {
       loginUser({
         password,
         email: username
-      }).then(res => props.setToken(res.token))
+      }).then(res => {
+        sessionStorage.setItem('email', res.user.email);
+        return props.setToken(res.token);
+      })
       .catch(e => {
         notificationSystem.error("Dades incorrectes")
       })
@@ -63,8 +66,8 @@ export default function Login(props: IProps) {
         onChange={e => setPassword(e.target.value)}>
           
         </TextField>
-      <Button onClick={e => handleSubmit(e)}>Entrar</Button>
-      <Button href="/signup" >Registrar-se</Button>
+      <Button variant="contained" onClick={e => handleSubmit(e)}>Entrar</Button>
+      <Button variant="outlined" href="/signup" >Registrar-se</Button>
     </div>
   )
   : (

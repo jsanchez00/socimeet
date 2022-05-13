@@ -13,8 +13,6 @@ code {
 }
 
 #root {
-  display: flex;
-  flex: 1;
   height: 100vh;
-  justify-content: center;
+  width: 100vw;
 }

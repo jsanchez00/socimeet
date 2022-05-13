@@ -1,8 +1,5 @@
-export interface IState {
-    userInfo: IUserInfoState;
-}
+import { IUserInfo } from '../../interfaces/user';
 
-export interface IUserInfoState {
-    name: string;
-    email: string;
+export interface IState {
+  userInfo: IUserInfo;
 }

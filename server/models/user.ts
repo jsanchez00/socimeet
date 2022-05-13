@@ -1,28 +1,39 @@
-
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: false
-    },
-    age: {
-        type: Number,
-        required: false
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    }
+  name: {
+    type: String,
+    required: false,
+  },
+  surname: {
+    type: String,
+    required: false,
+  },
+  nick: {
+    type: String,
+    required: false,
+  },
+  avatar: {
+    type: String,
+    required: false,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
 });
 
-userSchema.pre('save', async function(next) {
-    try {
+userSchema.pre('save', async function (next) {
+  try {
     // check method of registration
     const user = this;
     if (!user.isModified('password')) next();
@@ -33,17 +44,17 @@ userSchema.pre('save', async function(next) {
     // replace plain text password with hashed password
     this.password = hashedPassword;
     next();
-    } catch (error) {
+  } catch (error) {
     return next(error);
-    }
+  }
 });
 
 userSchema.methods.matchPassword = async function (password) {
-    try {
+  try {
     return await bcrypt.compare(password, this.password);
-    } catch (error) {
+  } catch (error) {
     throw new Error(error);
-    }
+  }
 };
 
-export const userModel = mongoose.model("user", userSchema);
+export const userModel = mongoose.model('user', userSchema);
