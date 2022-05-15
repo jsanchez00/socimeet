@@ -11,7 +11,7 @@ export const sendFriendRequest = (origin: string, destination: string) =>
     } as IRelationship,
   })
     .then((r) => notificationSystem.success('Sol·licitud enviada correctament'))
-    .catch((e) => {
+    .catch((e: Error) => {
       notificationSystem.error('Error al enviar la sol·licitud');
       return Promise.reject();
     });

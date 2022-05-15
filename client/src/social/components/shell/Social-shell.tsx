@@ -1,26 +1,50 @@
 import ChatIcon from '@mui/icons-material/Chat';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Badge, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemButton, ListItemText, TextField } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import "./Social-shell.css";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sendFriendRequest } from "../../aplication/commands/send-friend-request";
 import { useSelector } from "react-redux";
 import { userInfoSelector } from "../../../app/application/queries/user-info-selector";
+import PersonIcon from '@mui/icons-material/Person';
+import { fetchFriendsRequests } from "../../aplication/commands/fetch-friend-requests";
+import { friendsRequestPendingSelector, friendsRequestSelector } from "../../aplication/queries/friend-requests-pending-selector";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { declineRequest } from "../../aplication/commands/decline-request";
+import { acceptRequest } from "../../aplication/commands/accept-request";
+import { IRelationship } from '../../../interfaces/relationship';
 
 export default function SocialShell(){
     const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false);
+    const [openPendingFriendsDialog, setOpenPendingFriendsDialog] = useState(false);
     const [emailToRequest, setEmailToRequest] = useState("");
     const userInfo = useSelector(userInfoSelector);
+    const pendingFriendsRequest = useSelector(friendsRequestPendingSelector);
+    const friendsRequest = useSelector(friendsRequestSelector);
+
+    useEffect(() => {
+        if(userInfo.email)
+            fetchFriendsRequests();
+    }, [userInfo]);
 
     const handleClickOpenFriendDialog = () => {
         setOpenAddFriendDialog(true);
     };
-    
+
     const handleCloseFriendDialog = () => {
         setOpenAddFriendDialog(false);
+    };
+
+    const handleClickOpenPendingFriendsDialog = () => {
+        setOpenPendingFriendsDialog(true);
+    };
+    
+    const handleClosePendingFriendsDialog = () => {
+        setOpenPendingFriendsDialog(false);
     };
 
     const onClickSendFriendRequest = () => {
@@ -28,6 +52,23 @@ export default function SocialShell(){
     }
 
     const navigate = useNavigate()
+    let pendingFriendsRequestButton;
+
+    if(pendingFriendsRequest.length > 0){
+        pendingFriendsRequestButton = <div className="icon-button" onClick={handleClickOpenPendingFriendsDialog}>
+        <Badge color="primary" badgeContent={pendingFriendsRequest.length}>
+            <PersonIcon></PersonIcon>
+        </Badge>
+        <span>Sol·licituds d'amistat</span>
+    </div>;
+    }
+
+    const statusLabelDic = {
+        pending: "Pendent",
+        rejected: "Cancel·lada",
+        done: "Acceptada"
+    };
+
     return (
         <Box
       sx={{
@@ -46,7 +87,7 @@ export default function SocialShell(){
     >
         <div className="icon-button" onClick={e => navigate("/social")}>
             <ListAltIcon></ListAltIcon>
-            <span>Hitòries</span>
+            <span>Històries</span>
         </div>
         <div className="icon-button" onClick={e => navigate("friends")}>
             <PeopleOutlineIcon></PeopleOutlineIcon>
@@ -62,6 +103,7 @@ export default function SocialShell(){
                 <PersonAddIcon></PersonAddIcon>
                 <span>Afegir amic</span>
             </div>
+            {pendingFriendsRequestButton}
         </div>
 
         <Dialog open={openAddFriendDialog} onClose={handleCloseFriendDialog}>
@@ -85,6 +127,32 @@ export default function SocialShell(){
                 <Button color="error" onClick={handleCloseFriendDialog}>Cancel·lar</Button>
                 <Button disabled={!emailToRequest} color="success" onClick={onClickSendFriendRequest}>Enviar sol·licitud</Button>
             </DialogActions>
+        </Dialog>
+
+        <Dialog fullWidth={true} open={openPendingFriendsDialog} onClose={handleClosePendingFriendsDialog}>
+            <DialogTitle>Sol·licituds pendents</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Aprova o declina les sol·licituds d'amistat pendent
+                </DialogContentText>
+                <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {friendsRequest.map(re => {
+                        return (
+                            <ListItem>
+                                <ListItemText primary="Sol·licitant" secondary={re.origin}></ListItemText>
+                                <ListItemText primary="Estat" secondary={statusLabelDic[re.status]}></ListItemText>
+                                <ListItemButton disabled={re.status !== "pending"} sx={{color: "green"}} onClick={e => acceptRequest(re)}>
+                                    <CheckIcon></CheckIcon>
+                                </ListItemButton>
+                                <ListItemButton disabled={re.status !== "pending"} sx={{color: "red"}} onClick={e => declineRequest(re)}>
+                                    <CloseIcon></CloseIcon>
+                                </ListItemButton>
+                            </ListItem>
+                        )
+                    })}
+                </List>
+                
+            </DialogContent>
         </Dialog>
 
     </Box>

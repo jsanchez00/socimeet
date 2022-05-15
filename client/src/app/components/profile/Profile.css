@@ -25,3 +25,29 @@
 #save-profile-btn {
   margin-top: 24px;
 }
+
+#avatar-file-input {
+  display: none;
+}
+
+.label-upload {
+  display: flex;
+  column-gap: 4px;
+  font-size: 12pt;
+  background-color: #edf0f2;
+  border-radius: 5px;
+  padding: 3px 10px;
+  color: #6f7886;
+  width: fit-content;
+  cursor: pointer;
+  align-self: flex-end;
+  text-transform: uppercase;
+  font-weight: 600;
+  align-self: center;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.label-upload:hover {
+  background-color: #1a39601a;
+}

@@ -1,10 +1,9 @@
-import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
-import { router as userRoutes } from './routes/user';
-import { router as relationshipRoutes } from './routes/relatonship';
 import './passport/local-auth';
+import { router as relationshipRoutes } from './routes/relatonship';
+import { router as userRoutes } from './routes/user';
 
 const port = process.env.PORT || 5000;
 
@@ -28,6 +27,8 @@ mongoose
   .catch((e: Error) => console.error(e.message));
 
 // Serve the static files from the React app
+
+app.use(express.static('static'));
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // All other unmatched requests will return the React app
