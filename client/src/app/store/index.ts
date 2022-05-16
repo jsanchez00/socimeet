@@ -2,11 +2,13 @@ import { combineReducers, configureStore, Dispatch, Store } from '@reduxjs/toolk
 import { IState } from '../domain';
 import userInfoReducer from './user-info-reducer';
 import friendRequestPendingReducer from '../../social/state/friend-request-pending-reducer';
+import friendsReducer from '../../social/state/friends-reducer';
 
 export let store: Store;
 const reducer = combineReducers({
   userInfo: userInfoReducer,
   friendRequestPending: friendRequestPendingReducer,
+  friends: friendsReducer,
 });
 
 const initializeStore = () => {

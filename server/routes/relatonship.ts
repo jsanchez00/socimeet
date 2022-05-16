@@ -68,3 +68,24 @@ router.post(`${PATH}/send-request`, (req, res) => {
       }
     });
 });
+
+router.post(`${PATH}/get-friends`, (req, res) => {
+  relationShipModel
+    .find({
+      status: 'done',
+      $or: [{ destination: req.body.email }, { origin: req.body.email }],
+    })
+    .then((r) => {
+      const emails = r.map((i) => {
+        if (i.destination === req.body.email) return i.origin;
+        if (i.origin === req.body.email) return i.destination;
+      });
+      userModel
+        .where('email')
+        .in(emails)
+        .select('name email nick surname avatar description')
+        .then((friends) => {
+          res.send(friends);
+        });
+    });
+});

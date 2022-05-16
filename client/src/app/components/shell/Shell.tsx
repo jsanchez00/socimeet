@@ -23,25 +23,28 @@ interface IProps {
 export default function Shell(props: IProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [navTitle, setNavTitle] = useState<string>("Social");
+  const [email] = useState<string>(sessionStorage.getItem('email') as any);
 
   const userInfo = useSelector(userInfoSelector);
 
   useEffect(() => {
-    if(!userInfo.email){
-      const email: any = sessionStorage.getItem('email');
+    if(!userInfo?.email && email){
       fetchUserInfo(email);
     }
-  }, []);
+  }, [userInfo, email]);
 
   const navigate = useNavigate()
 
   const path = window.location.pathname;
 
-  if(path == "/profile" && navTitle !== "Perfil"){
+  if(path === "/profile" && navTitle !== "Perfil"){
     setNavTitle("Perfil");
   }
-  else if(path == "/social" && navTitle !== "Social"){
+  else if(path === "/social" && navTitle !== "Social"){
     setNavTitle("Social");
+  }
+  else if(path === "/social/friends" && navTitle !== "Social - Amics"){
+    setNavTitle("Social - Amics");
   }
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
