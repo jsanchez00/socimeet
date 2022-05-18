@@ -15,11 +15,11 @@ app.use('/api', relationshipRoutes);
 app.use('/api', chatRoutes);
 let MONGODB_URI = `mongodb://0.0.0.0:27017`;
 
-if (process.env.C_ENV === 'P') {
+/* if (process.env.C_ENV === 'P') {
   const mongoPassword = '12345';
   const config = JSON.parse(process.env.APP_CONFIG);
   MONGODB_URI = 'mongodb://' + config.mongo.user + ':' + encodeURIComponent(mongoPassword) + '@' + config.mongo.hostString;
-}
+} */
 
 console.log(MONGODB_URI);
 

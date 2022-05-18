@@ -12,9 +12,9 @@ const PATH = '/chat';
 router.post(`${PATH}/get-list`, (req, res) => {
   getFriends(req.body.email).then((friends: IUserInfo[]) => {
     chatMessageModel.find({ $or: [{ receiver: req.body.email }, { transmitter: req.body.email }] }).then((messages: IMessage[]) => {
-      let messageSummary: IMessageSummary[] = [];
+      const messageSummary: IMessageSummary[] = [];
       friends.forEach((f) => {
-        if (messages.findIndex((m) => m.receiver === f.email || m.transmitter === f.email) != -1) {
+        if (messages.findIndex((m) => m.receiver === f.email || m.transmitter === f.email) !== -1) {
           messageSummary.push({
             receiver: f.email,
             transmitter: req.body.email,
