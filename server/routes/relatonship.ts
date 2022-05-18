@@ -69,6 +69,24 @@ router.post(`${PATH}/send-request`, (req, res) => {
     });
 });
 
+router.post(`${PATH}/remove-friend`, (req, res) => {
+  relationShipModel
+    .deleteOne({
+      $and: [
+        {
+          $or: [{ destination: req.body.email }, { origin: req.body.email }],
+        },
+        {
+          $or: [{ destination: req.body.friendEmail }, { origin: req.body.friendEmail }],
+        },
+        {
+          status: 'done',
+        },
+      ],
+    })
+    .then((r) => res.send(r));
+});
+
 router.post(`${PATH}/get-friends`, (req, res) => {
   relationShipModel
     .find({

@@ -20,6 +20,8 @@ interface IProps {
   setToken: any;
 }
 
+let userInfoCalled = false;
+
 export default function Shell(props: IProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [navTitle, setNavTitle] = useState<string>("Social");
@@ -28,7 +30,8 @@ export default function Shell(props: IProps) {
   const userInfo = useSelector(userInfoSelector);
 
   useEffect(() => {
-    if(!userInfo?.email && email){
+    if(!userInfo?.email && email && !userInfoCalled){
+      userInfoCalled = true;
       fetchUserInfo(email);
     }
   }, [userInfo, email]);
