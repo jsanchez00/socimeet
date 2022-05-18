@@ -17,6 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { declineRequest } from "../../aplication/commands/decline-request";
 import { acceptRequest } from "../../aplication/commands/accept-request";
 import Friends from '../friends/Friends';
+import ChatShell from '../chat-shell/ChatShell';
 
 export default function SocialShell(){
     const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false);
@@ -93,7 +94,7 @@ export default function SocialShell(){
                 <PeopleOutlineIcon></PeopleOutlineIcon>
                 <span>Amics</span>
             </div>
-            <div className="icon-button" onClick={e => navigate("messages")}>
+            <div className="icon-button" onClick={e => navigate("messages/list")}>
                 <ChatIcon></ChatIcon>
                 <span>Xats</span>
             </div>
@@ -157,6 +158,7 @@ export default function SocialShell(){
         <div className="social-shell-container">
             <Routes>
                 <Route path="friends" element={<Friends />}></Route>
+                <Route path="messages/*" element={<ChatShell />}></Route>
             </Routes> 
         </div>
     </div>

@@ -88,7 +88,7 @@ router.post(`${PATH}/remove-friend`, (req, res) => {
 });
 
 router.post(`${PATH}/get-friends`, (req, res) => {
-  relationShipModel
+  /* relationShipModel
     .find({
       status: 'done',
       $or: [{ destination: req.body.email }, { origin: req.body.email }],
@@ -105,5 +105,30 @@ router.post(`${PATH}/get-friends`, (req, res) => {
         .then((friends) => {
           res.send(friends);
         });
-    });
+    }); */
+  getFriends(req.body.email).then((r) => {
+    console.log(r);
+    res.send(r);
+  });
 });
+
+export const getFriends = (email: string): Promise<any> => {
+  return relationShipModel
+    .find({
+      status: 'done',
+      $or: [{ destination: email }, { origin: email }],
+    })
+    .then((r) => {
+      const emails = r.map((i) => {
+        if (i.destination === email) return i.origin;
+        if (i.origin === email) return i.destination;
+      });
+      return userModel
+        .where('email')
+        .in(emails)
+        .select('name email nick surname avatar description')
+        .then((friends) => {
+          return friends;
+        });
+    });
+};

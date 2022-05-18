@@ -19,6 +19,8 @@ export const friendsSlice = createSlice<
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
+      console.log('reducer friends');
+      console.log(action);
       state = action.payload;
       return state;
     },

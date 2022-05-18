@@ -9,6 +9,8 @@ import { removeFriend } from "../../aplication/commands/friends/remove-friend";
 import { friendsSelector } from "../../aplication/queries/friends-selector";
 import { useState } from 'react';
 import { ConfirmationDialog } from "../../../core/components/ConfirmDialog/ConfirmDialog";
+import { useNavigate } from 'react-router-dom';
+import { getChatDetail } from "../../aplication/commands/chats/get-detail";
 
 let serviceFriendCalled = false;
 
@@ -17,6 +19,8 @@ export default function Friends(){
     const userInfo = useSelector(userInfoSelector);
     const [openConfirm, setOpenConfirm] = useState(false);
     const [currentEmailFriend, setCurrentEmailFriend] = useState('');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(!serviceFriendCalled && userInfo?.email){
@@ -30,6 +34,12 @@ export default function Friends(){
         setOpenConfirm(true);
     }
 
+    const sendMessageHandler = (friendEmail: string) => {
+        getChatDetail(friendEmail).then(r => {
+            navigate("/social/messages/detail");
+        })
+    }
+
     return (
         <div className="container">
             <h1>Llista d'amics ({friends?.length || 0})</h1>
@@ -41,8 +51,8 @@ export default function Friends(){
                         key={f.email}
                         secondaryAction={
                             <div>
-                                <IconButton edge="end" aria-label="comments">
-                                <SendIcon />
+                                <IconButton edge="end" aria-label="comments" onClick={e => sendMessageHandler(f.email)}>
+                                    <SendIcon />
                                 </IconButton>
                                 <IconButton edge="end" sx={{color: "red", "margin-left": 7}} onClick={e => removeFriendHandler(f.email)}>
                                     <DeleteIcon />

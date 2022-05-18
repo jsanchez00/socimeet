@@ -4,6 +4,7 @@ import path from 'path';
 import './passport/local-auth';
 import { router as relationshipRoutes } from './routes/relatonship';
 import { router as userRoutes } from './routes/user';
+import { router as chatRoutes } from './routes/chat';
 
 const port = process.env.PORT || 5000;
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use('/api', userRoutes);
 app.use('/api', relationshipRoutes);
+app.use('/api', chatRoutes);
 let MONGODB_URI = `mongodb://0.0.0.0:27017`;
 
 if (process.env.C_ENV === 'P') {
