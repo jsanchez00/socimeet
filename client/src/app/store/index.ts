@@ -5,6 +5,7 @@ import friendRequestPendingReducer from '../../social/state/friend-request-pendi
 import friendsReducer from '../../social/state/friends-reducer';
 import chatDetailSelectedReducer from '../../social/state/chat-detail-selected-reducer';
 import chatListReducer from '../../social/state/chat-list-reducer';
+import publicationsReducer from '../../social/state/publications-reducer';
 
 export let store: Store;
 const reducer = combineReducers({
@@ -13,6 +14,7 @@ const reducer = combineReducers({
   friends: friendsReducer,
   chatDetailSelected: chatDetailSelectedReducer,
   chatList: chatListReducer,
+  publications: publicationsReducer,
 });
 
 const initializeStore = () => {

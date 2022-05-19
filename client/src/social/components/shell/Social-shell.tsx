@@ -18,6 +18,7 @@ import { declineRequest } from "../../aplication/commands/decline-request";
 import { acceptRequest } from "../../aplication/commands/accept-request";
 import Friends from '../friends/Friends';
 import ChatShell from '../chat-shell/ChatShell';
+import Publications from "../publications/Publications";
 
 export default function SocialShell(){
     const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false);
@@ -86,7 +87,7 @@ export default function SocialShell(){
                     padding: "10px 0",
                     "border-right": "1px solid #333"
                 }}>
-            <div className="icon-button" onClick={e => navigate("/social")}>
+            <div className="icon-button" onClick={e => navigate("publications")}>
                 <ListAltIcon></ListAltIcon>
                 <span>Històries</span>
             </div>
@@ -159,6 +160,7 @@ export default function SocialShell(){
             <Routes>
                 <Route path="friends" element={<Friends />}></Route>
                 <Route path="messages/*" element={<ChatShell />}></Route>
+                <Route path="publications" element={<Publications/>}></Route>
             </Routes> 
         </div>
     </div>
