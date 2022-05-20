@@ -5,11 +5,12 @@ import { add } from '../../../state/publications-reducer';
 import { notificationSystem } from '../../../../app/application/commands/notification-system';
 import { userInfoSelector } from '../../../../app/application/queries/user-info-selector';
 
-export const createPublication = (text: string, image?: string): Promise<any> => {
+export const createPublication = (title: string, text: string, image?: string): Promise<any> => {
   const publication: Partial<IPublication> = {
     emailUser: userInfoSelector(getState())?.email,
     image,
     text,
+    title,
   };
   return customFetch('publications/create', { method: 'POST', body: publication })
     .then((r: IPublication) => {

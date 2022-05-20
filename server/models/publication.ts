@@ -5,7 +5,15 @@ const publicationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+    required: true,
+  },
   text: {
+    type: String,
+    required: true,
+  },
+  title: {
     type: String,
     required: true,
   },
@@ -23,6 +31,10 @@ export const publicationModel = mongoose.model('publication', publicationSchema)
 
 const publicationAnswerSchema = new mongoose.Schema({
   emailUser: {
+    type: String,
+    required: true,
+  },
+  publicationId: {
     type: String,
     required: true,
   },
@@ -44,6 +56,10 @@ export const publicationAnswerModel = mongoose.model('publicationAnswer', public
 
 const publicationLikeSchema = new mongoose.Schema({
   emailUser: {
+    type: String,
+    required: true,
+  },
+  publicationId: {
     type: String,
     required: true,
   },

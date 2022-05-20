@@ -2,7 +2,7 @@ import { IMessageSummary } from '../../interfaces/message';
 import { IRelationship } from '../../interfaces/relationship';
 import { IUserInfo } from '../../interfaces/user';
 import { IChatDetailState } from '../../social/state/chat-detail-selected-reducer';
-import { IPublication } from '../../interfaces/publication';
+import { IPublicationExtended } from '../../interfaces/publication';
 
 export interface IState {
   userInfo: IUserInfo;
@@ -10,5 +10,5 @@ export interface IState {
   friends: IUserInfo[];
   chatDetailSelected: IChatDetailState;
   chatList: IMessageSummary[];
-  publications: IPublication[];
+  publications: IPublicationExtended[];
 }

@@ -1,13 +1,15 @@
 import { CaseReducer, createSlice } from '@reduxjs/toolkit';
-import { IPublication } from '../../interfaces/publication';
+import { IPublicationExtended } from '../../interfaces/publication';
 
-const initialState: IPublication[] = [];
+const initialState: IPublicationExtended[] = [];
 
 export const publicationsSlice = createSlice<
-  IPublication[],
+  IPublicationExtended[],
   {
-    ['update']: CaseReducer<IPublication[], any>;
-    ['add']: CaseReducer<IPublication[], any>;
+    ['update']: CaseReducer<IPublicationExtended[], any>;
+    ['add']: CaseReducer<IPublicationExtended[], any>;
+    ['addAnswer']: CaseReducer<IPublicationExtended[], any>;
+    ['addReaction']: CaseReducer<IPublicationExtended[], any>;
   }
 >({
   name: 'publications',
@@ -25,10 +27,32 @@ export const publicationsSlice = createSlice<
       state.push(action.payload);
       return state;
     },
+    addAnswer: (state, action) => {
+      state.forEach((p) => {
+        if (p.id === action.payload.publicationId) {
+          if (!p.answers) {
+            p.answers = [];
+          }
+          p.answers.push(action.payload);
+        }
+      });
+      return state;
+    },
+    addReaction: (state, action) => {
+      state.forEach((p) => {
+        if (p.id === action.payload.publicationId) {
+          if (!p.likes) {
+            p.likes = [];
+          }
+          p.likes.push(action.payload);
+        }
+      });
+      return state;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { update, add } = publicationsSlice.actions;
+export const { update, add, addAnswer, addReaction } = publicationsSlice.actions;
 
 export default publicationsSlice.reducer;

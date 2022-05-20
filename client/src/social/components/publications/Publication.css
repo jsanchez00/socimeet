@@ -1,0 +1,15 @@
+.like-btn[used]{
+    color: #1976d2;
+}
+
+.dislike-btn[disabled]{
+    color: #1976d2;
+}
+
+.star-btn[disabled]{
+    color: #d23a3a;
+}
+
+.heart-btn[disabled]{
+    color: #d23a3a;
+}
