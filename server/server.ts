@@ -15,7 +15,7 @@ app.use('/api', userRoutes);
 app.use('/api', relationshipRoutes);
 app.use('/api', publicationpRoutes);
 app.use('/api', chatRoutes);
-let MONGODB_URI = `mongodb://0.0.0.0:27017`;
+const MONGODB_URI = `mongodb://0.0.0.0:27017`;
 
 /* if (process.env.C_ENV === 'P') {
   const mongoPassword = '12345';

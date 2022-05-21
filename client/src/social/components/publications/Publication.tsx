@@ -168,13 +168,13 @@ export default function Publication(props: IPublicationProps){
                 <CardContent>
                     <Typography variant="h6">Respostes ({publication?.answers?.length || 0})</Typography>
                     <List>
-                        {(publication?.answers || []).map((answer, key) => {
+                        {(publication?.answers || []).map((answer: any, key: any) => {
                             const resAuthor: IUserInfo =  persons.find(f => f.email === answer.emailUser) as any;
                             return (
                                 <ListItem key={key} divider>
                                     <ListItemAvatar >
-                                        <Tooltip title={resAuthor.nick || resAuthor.email} arrow>
-                                            <Avatar sx={{ width: 26, height: 26 }} src={resAuthor.avatar}></Avatar>
+                                        <Tooltip title={resAuthor?.nick || resAuthor?.email} arrow>
+                                            <Avatar sx={{ width: 26, height: 26 }} src={resAuthor?.avatar}></Avatar>
                                         </Tooltip>
                                     </ListItemAvatar>
                                     <ListItemText primary={answer?.date ? format(new Date(answer.date), 'dd/MM/yyyy - HH:mm') : '' } secondary={answer.text}/>

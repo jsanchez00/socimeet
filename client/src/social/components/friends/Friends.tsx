@@ -43,45 +43,47 @@ export default function Friends(){
     return (
         <div className="container">
             <h1>Llista d'amistats ({friends?.length || 0})</h1>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {friends.map(f => {     
-                    return (
-                    <ListItem alignItems="flex-start"          
-                        divider={true}
-                        key={f.email}
-                        secondaryAction={
-                            <div>
-                                <Button startIcon={<SendIcon />} variant="contained" onClick={e => sendMessageHandler(f.email)}>
-                                    Veure el xat
-                                </Button>
-                                <Button color="error" startIcon={<DeleteIcon />} sx={{"margin-left": 7}} variant="outlined" onClick={e => removeFriendHandler(f.email)}>
-                                    Desfer amistat
-                                </Button>
-                            </div>
-                      }>
-                            <ListItemAvatar>
-                                <Avatar alt={f.name} src={f.avatar} sx={{ width: 75, height: 75, "margin-right": 30 }} />
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={f.nick || f.email}
-                                secondary={
-                                    <React.Fragment>
-                                        <Typography
-                                            sx={{ display: 'inline' }}
-                                            component="span"
-                                            variant="body2"
-                                            color="text.primary"
-                                        >
-                                            {f.name} {f.surname} 
-                                        </Typography>
-                                        <br></br>
-                                        {f.description}
-                                    </React.Fragment>
-                                }/>
-                        </ListItem>
-                    )
-                })}
-                <ConfirmationDialog setOpen={setOpenConfirm} open={openConfirm} message="Estas segur que vols desfer l'amistat?" title="Confirmació" onClose={() => null} onAccept={() => removeFriend(currentEmailFriend).then(r => setOpenConfirm(false))}></ConfirmationDialog>
-            </List>
+            {friends?.length > 0 
+            ? <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            {friends.map(f => {     
+                return (
+                <ListItem alignItems="flex-start"          
+                    divider={true}
+                    key={f.email}
+                    secondaryAction={
+                        <div>
+                            <Button startIcon={<SendIcon />} variant="contained" onClick={e => sendMessageHandler(f.email)}>
+                                Veure el xat
+                            </Button>
+                            <Button color="error" startIcon={<DeleteIcon />} sx={{"margin-left": 7}} variant="outlined" onClick={e => removeFriendHandler(f.email)}>
+                                Desfer amistat
+                            </Button>
+                        </div>
+                  }>
+                        <ListItemAvatar>
+                            <Avatar alt={f.name} src={f.avatar} sx={{ width: 75, height: 75, "margin-right": 30 }} />
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={f.nick || f.email}
+                            secondary={
+                                <React.Fragment>
+                                    <Typography
+                                        sx={{ display: 'inline' }}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary"
+                                    >
+                                        {f.name} {f.surname} 
+                                    </Typography>
+                                    <br></br>
+                                    {f.description}
+                                </React.Fragment>
+                            }/>
+                    </ListItem>
+                )
+            })}
+            <ConfirmationDialog setOpen={setOpenConfirm} open={openConfirm} message="Estas segur que vols desfer l'amistat?" title="Confirmació" onClose={() => null} onAccept={() => removeFriend(currentEmailFriend).then(r => setOpenConfirm(false))}></ConfirmationDialog>
+        </List>
+            : <Typography variant="body1" color={"#333"}>No tens cap amistat registrada encara, pots registrar-ne una amb el botó Afegir amic</Typography>}
         </div>)
 }

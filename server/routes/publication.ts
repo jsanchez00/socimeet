@@ -58,11 +58,11 @@ router.post(`${PATH}/get-friends-publications`, (req, res) => {
         const foundLikes: IPublicationLike[] = await publicationLikeModel.find({
           publicationId: { $in: ids },
         });
-        let publicationsExtended: Partial<IPublicationExtended>[] = [];
+        const publicationsExtended: Partial<IPublicationExtended>[] = [];
         r.forEach((p) => {
           const currentAnswers = foundAnswers.filter((a) => a.publicationId === p.id);
           const currentLikes = foundLikes.filter((a) => a.publicationId === p.id);
-          let currentP: IPublicationExtended = {
+          const currentP: IPublicationExtended = {
             answers: currentAnswers,
             likes: currentLikes,
             date: p.date,

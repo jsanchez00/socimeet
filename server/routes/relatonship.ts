@@ -107,7 +107,6 @@ router.post(`${PATH}/get-friends`, (req, res) => {
         });
     }); */
   getFriends(req.body.email).then((r) => {
-    console.log(r);
     res.send(r);
   });
 });

@@ -13,6 +13,7 @@ import { getState } from "../../../../app/store";
 import { getFriends } from "../../../aplication/commands/friends/get-friends";
 import "./ChatList.css";
 import SendIcon from '@mui/icons-material/Send';
+import Typography from '@mui/material/Typography/Typography';
 
 let serviceChatsCalled = false;
 let serviceFriendsCalled = false;
@@ -51,7 +52,7 @@ export default function ChatList() {
     <div>
         <h1>Xats ({list.length || 0})</h1>
         <List>
-        {friends?.length > 0 ? list.map((ch, key) => {
+        {list?.length > 0 ? list.map((ch, key) => {
             const friendEmail = userInfo.email !== ch.transmitter ? ch.transmitter : ch.receiver;
             const friend = findFriendSelector(friendEmail)(getState());
             
@@ -70,7 +71,7 @@ export default function ChatList() {
                     <Button startIcon={<SendIcon/>} variant="contained">Xatejar</Button>
                 </ListItem>
             )
-        }) : null}
+        }) : <Typography variant="body1" color={"#333"}>No hi ha cap xat obert, per iniciar-ne un ho has de fer des de la secció d' Amistats</Typography>}
         </List>
     </div>
     )
