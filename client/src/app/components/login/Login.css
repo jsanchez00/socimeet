@@ -5,3 +5,10 @@
   margin-top: 10vh;
   gap: 15px;
 }
+
+.progress-container{
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  justify-content: center;
+}

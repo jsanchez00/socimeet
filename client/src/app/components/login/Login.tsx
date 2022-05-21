@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from '@mui/material/TextField';
@@ -20,12 +21,13 @@ export default function Login(props: IProps) {
   const [validUsername, setValidUsername] = useState<boolean>(true);
 
   const [isFetching, setIsFetching] = useState<boolean>(false);
-
+  const navigateToHome = () => {
+    window.location.href = "/social/publications";
+  }
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setValidUsername(isValidRequiredField(username as any));
     setValidPassword(isValidRequiredField(password as any));
-    
       
     if(password && username){
       setIsFetching(true);
@@ -34,7 +36,8 @@ export default function Login(props: IProps) {
         email: username
       }).then(res => {
         sessionStorage.setItem('email', res.user.email);
-        return props.setToken(res.token);
+        props.setToken(res.token);
+        navigateToHome();
       })
       .catch(e => {
         notificationSystem.error("Dades incorrectes")
@@ -45,6 +48,10 @@ export default function Login(props: IProps) {
 
   return !isFetching ? (
     <div className="login-wrapper">
+      <Box sx={{display: "flex", gap: "15px", alignItems: "center"}}>
+        <img width={150} src="/assets/logo.png"></img>
+        <Typography variant="h2">Socimeet</Typography>
+      </Box>
       <h1>Login</h1>
       <TextField 
         id="username-input" 
@@ -66,12 +73,14 @@ export default function Login(props: IProps) {
         onChange={e => setPassword(e.target.value)}>
           
         </TextField>
-      <Button variant="contained" onClick={e => handleSubmit(e)}>Entrar</Button>
-      <Button variant="outlined" href="/signup" >Registrar-se</Button>
+      <Button sx={{width: "175px"}} variant="contained" onClick={e => handleSubmit(e)}>Entrar</Button>
+      <Button sx={{width: "175px"}} variant="outlined" href="/signup" >Registrar-se</Button>
     </div>
   )
   : (
-    <CircularProgress className="progress" thickness={1} size="80" />    
+    <div className="progress-container">
+      <CircularProgress sx={{width: "100px", height: "100px", alignSelf: "center"}} className="progress" thickness={1} size="80" />    
+    </div>
   )
 }
 

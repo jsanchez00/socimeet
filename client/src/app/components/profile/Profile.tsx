@@ -1,42 +1,61 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Avatar, Button, CircularProgress } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { useSelector } from "react-redux";
+import { clone, lensProp, set } from "ramda";
+import { useState, useEffect } from 'react';
+import { shallowEqual, useSelector } from "react-redux";
+import { updateAvatar } from "../../application/commands/update-avatar";
 import { updateUserInfo } from '../../application/commands/update-user-info';
 import { userInfoSelector } from "../../application/queries/user-info-selector";
 import './Profile.css';
-import { useState, useEffect } from 'react';
-import { lensProp, set } from "ramda";
+
+import AttachmentIcon from '@mui/icons-material/Attachment';
+import { updateUserAction } from "../../application/commands/update-user-action";
 
 
 export default function Profile() {
 
-  const [newUserInfo, setNewUserInfo] = useState(useSelector(userInfoSelector));
+  const userInfo = useSelector(userInfoSelector, shallowEqual);
   const [isFetching, setIsFetching] = useState(false);
 
   const saveHandler = (e: any) => {
     setIsFetching(true);
-    updateUserInfo(newUserInfo).finally(() => setIsFetching(false))
+    updateUserInfo(userInfo).finally(() => setIsFetching(false))
   }
 
   const onChangeField = (field: string, value: any) => {
-    setNewUserInfo(set(lensProp(field), value, newUserInfo));
+    updateUserAction(set(lensProp(field), value, userInfo));
   }
 
-  return !isFetching ? (
+  const handleAvatarChange = (e: any) => {
+    updateAvatar(e.target.files);
+  }
+
+  return !isFetching && userInfo?.email ? (
     <div className="profile-wrapper">
+      <Avatar
+        alt={userInfo.name}
+        src={userInfo.avatar }
+        sx={{ width: 100, height: 100 }}
+      />
+      <label className="label-upload">
+        <AttachmentIcon></AttachmentIcon>
+        Modificar imatge perfil
+        <input id="avatar-file-input" type="file" name="avatar" onChange={handleAvatarChange} accept="image/png,image/jpeg,image/jpg" />
+      </label>
+      
       <div className="profile-row">
         <TextField
           id="email-input"
           disabled
           label="Email"
           variant="standard"
-          value={newUserInfo.email}
+          value={userInfo.email}
         ></TextField>
         <TextField
           id="nick-input"
           label="Nick"
           variant="standard"
-          defaultValue={newUserInfo.nick}
+          defaultValue={userInfo.nick}
           onChange={e=> onChangeField("nick", e.currentTarget.value)}
         ></TextField>
         <TextField
@@ -44,14 +63,14 @@ export default function Profile() {
           label="Nom"
           variant="standard"
           onChange={e=> onChangeField("name", e.currentTarget.value)}
-          defaultValue={newUserInfo.name}
+          defaultValue={userInfo.name}
         ></TextField>
         <TextField
           id="surname-input"
           label="Cognoms"
           variant="standard"
           onChange={e=> onChangeField("surname", e.currentTarget.value)}
-          defaultValue={newUserInfo.surname}
+          defaultValue={userInfo.surname}
         ></TextField>
       </div>
       
@@ -60,7 +79,7 @@ export default function Profile() {
         label="Descripció personal"
         variant="outlined"
         onChange={e=> onChangeField("description", e.currentTarget.value)}
-        defaultValue={newUserInfo.description}
+        defaultValue={userInfo.description}
         rows={5}
         multiline
       ></TextField>
@@ -72,5 +91,5 @@ export default function Profile() {
         <CircularProgress thickness={1} size="80"></CircularProgress>
       </div>
     </div>
-  )
+  );
 }
