@@ -34,10 +34,10 @@ export function ConfirmationDialog(props: IProps) {
             {message}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleCancel}>
+          <Button variant="outlined" onClick={handleCancel} color="error">
             Cancel·lar
           </Button>
-          <Button onClick={handleOk}>Acceptar</Button>
+          <Button variant="contained" onClick={handleOk}>Acceptar</Button>
         </DialogActions>
       </Dialog>
       </div>

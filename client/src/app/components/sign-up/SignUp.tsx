@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import useToken from "../app/use-token";
 import { notificationSystem } from '../../application/commands/notification-system';
 import CircularProgress from "@mui/material/CircularProgress";
+import { Box, Typography } from "@mui/material";
 
 export default function SignUp() {
   const { token, setToken } = useToken();
@@ -19,8 +20,8 @@ export default function SignUp() {
   const [validRepeatPassword, setValidRepeatPassword] = useState<boolean>(true);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const navigateToLogin = (e: any) => {
-    window.location.href = "/";
+  const navigateToHome = (e: any) => {
+    window.location.href = "/social/publications";
   }
 
   const signHandler = async (e: any) => {
@@ -36,7 +37,7 @@ export default function SignUp() {
         notificationSystem.success("Enhorabona, alta realitzada correctament");
         sessionStorage.setItem('email', r.user.email);
         setToken(r.token);
-        navigateToLogin(null);
+        navigateToHome(null);
       })
       .catch(e => notificationSystem.error("Usuari ja registrat"))
       .finally(() => setIsFetching(false));
@@ -58,8 +59,23 @@ export default function SignUp() {
     }
   }
 
+  const onChangeEmailFieldHandler = (value: any) => {
+    setUserName(value);
+    let isValidEmail = false;
+    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(value)) {
+      isValidEmail = true;
+    }
+    
+    const isValid = isValidRequiredField(value) && isValidEmail;
+    setValidUsername(isValid);
+  }
+
   return !isFetching ?(
     <div className="signup-wrapper">
+      <Box sx={{display: "flex", gap: "15px", alignItems: "center"}}>
+        <img width={150} src="/assets/logo.png"></img>
+        <Typography variant="h2">Socimeet</Typography>
+      </Box>
       <h1>Registre</h1>
       <TextField 
         id="username-input" 
@@ -67,10 +83,8 @@ export default function SignUp() {
         label="Correu electrònic" 
         variant="standard" 
         error={!validUsername}
-        onBlur={e => setValidUsername(isValidRequiredField(e.target.value))}
-        onChange={e => setUserName(e.target.value)}>
-
-        </TextField>
+        onChange={e => onChangeEmailFieldHandler(e.target.value)}>
+      </TextField>
       <TextField 
         id="password-input" 
         required 
@@ -92,13 +106,13 @@ export default function SignUp() {
         type="password" 
         onChange={e => setRepeatPassword(e.target.value)}>
         </TextField>
-        <Button variant="contained" onClick={signHandler}>Registrar-se</Button>
-        <Button variant="outlined" href="/">Tornar</Button>
+        <Button sx={{width: "175px"}} variant="contained" onClick={signHandler}>Registrar-se</Button>
+        <Button sx={{width: "175px"}} variant="outlined" href="/">Tornar</Button>
       
     </div>
   ): (
     <div className="progress-container">
-      <CircularProgress className="progress" thickness={1} size="80" />    
+      <CircularProgress sx={{width: "100px", height: "100px", alignSelf: "center"}} className="progress" thickness={1} size="80" />    
     </div>
   )
 }

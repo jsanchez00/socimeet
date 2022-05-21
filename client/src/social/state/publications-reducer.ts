@@ -1,15 +1,20 @@
 import { CaseReducer, createSlice } from '@reduxjs/toolkit';
 import { IPublicationExtended } from '../../interfaces/publication';
 
-const initialState: IPublicationExtended[] = [];
+interface ICurrentState {
+  [id: string]: IPublicationExtended;
+}
+
+const initialState: ICurrentState = {};
 
 export const publicationsSlice = createSlice<
-  IPublicationExtended[],
+  ICurrentState,
   {
-    ['update']: CaseReducer<IPublicationExtended[], any>;
-    ['add']: CaseReducer<IPublicationExtended[], any>;
-    ['addAnswer']: CaseReducer<IPublicationExtended[], any>;
-    ['addReaction']: CaseReducer<IPublicationExtended[], any>;
+    ['update']: CaseReducer<ICurrentState, any>;
+    ['add']: CaseReducer<ICurrentState, any>;
+    ['addAnswer']: CaseReducer<ICurrentState, any>;
+    ['addReaction']: CaseReducer<ICurrentState, any>;
+    ['removeReaction']: CaseReducer<ICurrentState, any>;
   }
 >({
   name: 'publications',
@@ -24,35 +29,37 @@ export const publicationsSlice = createSlice<
       return state;
     },
     add: (state, action) => {
-      state.push(action.payload);
+      const id = action.payload.id;
+      state[id] = action.payload;
       return state;
     },
     addAnswer: (state, action) => {
-      state.forEach((p) => {
-        if (p.id === action.payload.publicationId) {
-          if (!p.answers) {
-            p.answers = [];
-          }
-          p.answers.push(action.payload);
-        }
-      });
+      const id = action.payload.publicationId;
+      if (!state[id]?.answers) {
+        state[id].answers = [];
+      }
+
+      state[id].answers.push(action.payload);
       return state;
     },
     addReaction: (state, action) => {
-      state.forEach((p) => {
-        if (p.id === action.payload.publicationId) {
-          if (!p.likes) {
-            p.likes = [];
-          }
-          p.likes.push(action.payload);
-        }
-      });
+      const id = action.payload.publicationId;
+      if (!state[id]?.likes) {
+        state[id].answers = [];
+      }
+      state[id].likes.push(action.payload);
+      return state;
+    },
+    removeReaction: (state, action) => {
+      const id = action.payload.publicationId;
+      const idxToRemove = state[id].likes.findIndex((l) => l.type === action.payload.type && l.emailUser === action.payload.emailUser);
+      state[id].likes.splice(idxToRemove, 1);
       return state;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { update, add, addAnswer, addReaction } = publicationsSlice.actions;
+export const { update, add, addAnswer, addReaction, removeReaction } = publicationsSlice.actions;
 
 export default publicationsSlice.reducer;

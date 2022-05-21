@@ -34,7 +34,7 @@ router.post(`${PATH}/get-detail`, (req, res) => {
           $or: [{ receiver: req.body.firstUser }, { transmitter: req.body.firstUser }],
         },
         {
-          $or: [{ destination: req.body.secondUser }, { origin: req.body.secondUser }],
+          $or: [{ receiver: req.body.secondUser }, { transmitter: req.body.secondUser }],
         },
       ],
     })

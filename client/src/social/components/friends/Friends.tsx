@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography, Button } from '@mui/material';
 import React, { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../app/application/queries/user-info-selector';
@@ -42,7 +42,7 @@ export default function Friends(){
 
     return (
         <div className="container">
-            <h1>Llista d'amics ({friends?.length || 0})</h1>
+            <h1>Llista d'amistats ({friends?.length || 0})</h1>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {friends.map(f => {     
                     return (
@@ -51,12 +51,12 @@ export default function Friends(){
                         key={f.email}
                         secondaryAction={
                             <div>
-                                <IconButton edge="end" aria-label="comments" onClick={e => sendMessageHandler(f.email)}>
-                                    <SendIcon />
-                                </IconButton>
-                                <IconButton edge="end" sx={{color: "red", "margin-left": 7}} onClick={e => removeFriendHandler(f.email)}>
-                                    <DeleteIcon />
-                                </IconButton>
+                                <Button startIcon={<SendIcon />} variant="contained" onClick={e => sendMessageHandler(f.email)}>
+                                    Veure el xat
+                                </Button>
+                                <Button color="error" startIcon={<DeleteIcon />} sx={{"margin-left": 7}} variant="outlined" onClick={e => removeFriendHandler(f.email)}>
+                                    Desfer amistat
+                                </Button>
                             </div>
                       }>
                             <ListItemAvatar>
@@ -81,7 +81,7 @@ export default function Friends(){
                         </ListItem>
                     )
                 })}
-                <ConfirmationDialog setOpen={setOpenConfirm} open={openConfirm} message="Estas segur que vols desfer l'amistat?" title="Confirmació" onClose={() => null} onAccept={() => removeFriend(currentEmailFriend)}></ConfirmationDialog>
+                <ConfirmationDialog setOpen={setOpenConfirm} open={openConfirm} message="Estas segur que vols desfer l'amistat?" title="Confirmació" onClose={() => null} onAccept={() => removeFriend(currentEmailFriend).then(r => setOpenConfirm(false))}></ConfirmationDialog>
             </List>
         </div>)
 }

@@ -10,5 +10,5 @@ export interface IState {
   friends: IUserInfo[];
   chatDetailSelected: IChatDetailState;
   chatList: IMessageSummary[];
-  publications: IPublicationExtended[];
+  publications: { [id: string]: IPublicationExtended };
 }

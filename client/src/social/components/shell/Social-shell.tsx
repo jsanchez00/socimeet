@@ -57,7 +57,7 @@ export default function SocialShell(){
     let pendingFriendsRequestButton;
 
     if(pendingFriendsRequest.length > 0){
-        pendingFriendsRequestButton = <div className="icon-button" onClick={handleClickOpenPendingFriendsDialog}>
+        pendingFriendsRequestButton = <div className="icon-button received-request-button" onClick={handleClickOpenPendingFriendsDialog}>
         <Badge color="primary" badgeContent={pendingFriendsRequest.length}>
             <PersonIcon></PersonIcon>
         </Badge>
@@ -75,7 +75,7 @@ export default function SocialShell(){
         <div>
             <Box
                 sx={{
-                    width: 70,
+                    width: 100,
                     position: "absolute",
                     top: 64,
                     bottom: "0",
@@ -89,11 +89,11 @@ export default function SocialShell(){
                 }}>
             <div className="icon-button" onClick={e => navigate("publications")}>
                 <ListAltIcon></ListAltIcon>
-                <span>Històries</span>
+                <span>Publicacions</span>
             </div>
             <div className="icon-button" onClick={e => navigate("friends")}>
                 <PeopleOutlineIcon></PeopleOutlineIcon>
-                <span>Amics</span>
+                <span>Amistats</span>
             </div>
             <div className="icon-button" onClick={e => navigate("messages/list")}>
                 <ChatIcon></ChatIcon>
@@ -126,29 +126,29 @@ export default function SocialShell(){
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button color="error" onClick={handleCloseFriendDialog}>Cancel·lar</Button>
-                    <Button disabled={!emailToRequest} color="success" onClick={onClickSendFriendRequest}>Enviar sol·licitud</Button>
+                    <Button variant="outlined" color="error" onClick={handleCloseFriendDialog}>Cancel·lar</Button>
+                    <Button variant="contained" disabled={!emailToRequest} color="primary" onClick={onClickSendFriendRequest}>Enviar sol·licitud</Button>
                 </DialogActions>
             </Dialog>
 
-            <Dialog fullWidth={true} open={openPendingFriendsDialog} onClose={handleClosePendingFriendsDialog}>
+            <Dialog fullWidth open={openPendingFriendsDialog} onClose={handleClosePendingFriendsDialog} maxWidth="md">
                 <DialogTitle>Sol·licituds pendents</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Aprova o declina les sol·licituds d'amistat pendent
+                        Aprova o declina les sol·licituds d'amistat pendents
                     </DialogContentText>
                     <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                        {friendsRequest.map(re => {
+                        {friendsRequest.map((re, key) => {
                             return (
-                                <ListItem>
+                                <ListItem key={key} sx={{gap: "20px"}}>
                                     <ListItemText primary="Sol·licitant" secondary={re.origin}></ListItemText>
                                     <ListItemText primary="Estat" secondary={statusLabelDic[re.status]}></ListItemText>
-                                    <ListItemButton disabled={re.status !== "pending"} sx={{color: "green"}} onClick={e => acceptRequest(re)}>
-                                        <CheckIcon></CheckIcon>
-                                    </ListItemButton>
-                                    <ListItemButton disabled={re.status !== "pending"} sx={{color: "red"}} onClick={e => declineRequest(re)}>
-                                        <CloseIcon></CloseIcon>
-                                    </ListItemButton>
+                                    <Button disabled={re.status !== "pending"} variant="contained" color="success" onClick={e => acceptRequest(re)} startIcon={<CheckIcon/>}>
+                                        Acceptar petició
+                                    </Button>
+                                    <Button sx={{marginLeft: "20px"}} disabled={re.status !== "pending"} variant="outlined" color="error" onClick={e => declineRequest(re)} startIcon={<CloseIcon/>}>
+                                        Declinar petició
+                                    </Button>
                                 </ListItem>
                             )
                         })}

@@ -6,12 +6,13 @@ import { useEffect } from 'react';
 import { IMessageSummary } from '../../../../interfaces/message';
 import { useNavigate } from 'react-router-dom';
 import { getChatDetail } from '../../../aplication/commands/chats/get-detail';
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Button } from '@mui/material';
 import { Guid } from 'guid-typescript';
 import { findFriendSelector, friendsSelector } from '../../../aplication/queries/friends-selector';
 import { getState } from "../../../../app/store";
 import { getFriends } from "../../../aplication/commands/friends/get-friends";
 import "./ChatList.css";
+import SendIcon from '@mui/icons-material/Send';
 
 let serviceChatsCalled = false;
 let serviceFriendsCalled = false;
@@ -48,9 +49,9 @@ export default function ChatList() {
 
   return (
     <div>
-        <h1>Chats ({list.length || 0})</h1>
+        <h1>Xats ({list.length || 0})</h1>
         <List>
-        {friends?.length > 0 ? list.map(ch => {
+        {friends?.length > 0 ? list.map((ch, key) => {
             const friendEmail = userInfo.email !== ch.transmitter ? ch.transmitter : ch.receiver;
             const friend = findFriendSelector(friendEmail)(getState());
             
@@ -60,12 +61,13 @@ export default function ChatList() {
                     onClick={e => onClickChatHandler(ch)}
                     alignItems="flex-start"          
                     divider={true}
-                    key={Guid.create().toString()}
+                    key={key}
                 >
                     <ListItemAvatar>
                         <Avatar alt={friend?.nick || friend?.email} src={friend?.avatar}></Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={friend?.nick || friend?.email}></ListItemText>
+                    </ListItemAvatar>
+                    <ListItemText sx={{marginTop: "15px"}} primary={friend?.nick || friend?.email}></ListItemText>
+                    <Button startIcon={<SendIcon/>} variant="contained">Xatejar</Button>
                 </ListItem>
             )
         }) : null}

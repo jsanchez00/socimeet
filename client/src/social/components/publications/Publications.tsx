@@ -1,3 +1,6 @@
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AttachmentIcon from '@mui/icons-material/Attachment';
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -5,26 +8,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { useState, useEffect } from 'react';
-import { createPublication } from "../../aplication/commands/publications/create";
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { publicationsSelector } from "../../aplication/queries/publications-selector";
 import { userInfoSelector } from '../../../app/application/queries/user-info-selector';
-import { fetchFriendsPublications } from '../../aplication/commands/publications/fetch-friends-publications';
-import { Avatar, Box, Card, CardActions, CardContent, CardHeader, CardMedia, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@mui/material';
-import { Guid } from "guid-typescript";
-import { friendsSelector } from '../../aplication/queries/friends-selector';
-import { getFriends } from '../../aplication/commands/friends/get-friends';
-import CommentIcon from '@mui/icons-material/Comment';
-import Typography from '@mui/material/Typography';
-import { IUserInfo } from '../../../interfaces/user';
-import { answerPublication } from "../../aplication/commands/publications/answer";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import StarIcon from '@mui/icons-material/Star';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { TPublicationLike } from '../../../interfaces/publication';
+import { getFriends } from '../../aplication/commands/friends/get-friends';
+import { answerPublication } from "../../aplication/commands/publications/answer";
+import { createPublication } from "../../aplication/commands/publications/create";
 import { createReaction } from "../../aplication/commands/publications/create-reaction";
+import { deleteReaction } from "../../aplication/commands/publications/delete-reaction";
+import { fetchFriendsPublications } from '../../aplication/commands/publications/fetch-friends-publications';
+import { friendsSelector } from '../../aplication/queries/friends-selector';
+import { publicationIdsSelector } from "../../aplication/queries/publications-selector";
+import Publication from "./Publication";
 import "./Publication.css";
 
 let isCalledFriendsPublication = false;
@@ -33,11 +29,8 @@ let isCalledFriends = false;
 export default function Publications() {
     const [openCreateMessageDialog, setOpenCreateMessageDialog] = useState(false);
     const [openAnswerDialog, setOpenAnswerDialog] = useState(false);
-    const [publicationContent, setPublicationContent] = useState("");
-    const [answer, setAnswer] = useState("");
-    const [publicationTitle, setPublicationTitle] = useState("");
     const [publicationIdAnswer, setPublicationIdAnswer] = useState("");
-    const publications = useSelector(publicationsSelector);
+    const publicationsIds = useSelector(publicationIdsSelector);
     const userInfo = useSelector(userInfoSelector);
     const friends = useSelector(friendsSelector);
 
@@ -50,9 +43,13 @@ export default function Publications() {
         setOpenAnswerDialog(false);
     }
 
-    const openAnswerHandler = (publicationId: string) => {
-        setPublicationIdAnswer(publicationId);
-        setOpenAnswerDialog(true);
+    const reactionHandler = (type: TPublicationLike, publicationId: string, used: boolean) => {
+        if(!used){
+            createReaction(type, publicationId);
+        }
+        else {
+            deleteReaction(type, publicationId);
+        }
     }
 
     useEffect(() => {
@@ -69,124 +66,62 @@ export default function Publications() {
 
     return (
     <div className="publications-container">
-        <Button onClick={e => setOpenCreateMessageDialog(true)}> Crear publicació </Button>
+        <div className="publications-header">
+            <h1>Publicacions</h1>
+            <Button startIcon={<AddCircleOutlineIcon/>} sx={{height: 50, "margin-top": 20}} variant="contained" onClick={e => setOpenCreateMessageDialog(true)}> Crear publicació </Button> 
+        </div>
         <div className="publications-list">
-            {friends?.length > 0 && publications?.length > 0 ? publications.map(p => {
-                const persons: IUserInfo[] = [userInfo].concat(friends);
-                const author: IUserInfo =  persons.find(f => f.email === p.emailUser) as any;
-                const dislikes = p.likes?.filter(l => l.type === "Dislike");
-                const hearts = p.likes?.filter(l => l.type === "Heart");
-                const likes = p.likes?.filter(l => l.type === "Like");
-                const stars = p.likes?.filter(l => l.type === "Star");
-                const likeDisabled = likes.findIndex(l => l.emailUser === userInfo.email) != -1;
-                const dislikeDisabled = dislikes.findIndex(l => l.emailUser === userInfo.email) != -1;
-                const starDisabled = stars.findIndex(l => l.emailUser === userInfo.email) != -1;
-                const heartDisabled = hearts.findIndex(l => l.emailUser === userInfo.email) != -1;
+            {publicationsIds?.length > 0 ? publicationsIds.map((id, key) => {
                 return (
-                    <Box>
-                    <Card className="publication-item" sx={{"margin-bottom": 20}}>
-                        <CardHeader avatar={
-                            <Tooltip title={author?.nick as any || author?.email as any} arrow>
-                                <Avatar src={author?.avatar}>
-                                </Avatar>
-                            </Tooltip>
-                        }
-                        action={
-                        <IconButton>
-                            <CommentIcon onClick={e => openAnswerHandler(p.id as any)} />
-                        </IconButton>
-                        }
-                        title={p.title}
-                        subheader={p.date.toString()}
-                        />
-                        {p.image ?       
-                            <CardMedia
-                                component="img"
-                                height="194"
-                                image={p.image}
-                                alt={p.title}
-                            /> 
-                        : null}
-                        <CardContent>
-                            <Typography variant="body2" color="text.secondary">
-                                {p.text}
-                            </Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <IconButton className="like-btn" property={likeDisabled ? "used": "unused"} onClick={e=> createReaction("Like", p.id as any)}>
-                                <Typography>
-                                    {likes.length || 0}
-                                </Typography>
-                                <ThumbUpIcon />
-                            </IconButton>
-                            <IconButton className="heart-btn" disabled={heartDisabled} onClick={e=> createReaction("Heart", p.id as any)}>
-                                {hearts.length || 0}
-                                <FavoriteIcon />
-                            </IconButton>
-                            <IconButton className="star-btn" disabled={starDisabled} onClick={e=> createReaction("Star", p.id as any)}>
-                                {stars.length || 0}
-                                <StarIcon />
-                            </IconButton>
-                            <IconButton className="dislike-btn" disabled={dislikeDisabled} onClick={e=> createReaction("Dislike", p.id as any)}>
-                                {dislikes.length || 0}
-                                <ThumbDownIcon />
-                            </IconButton>
-                        </CardActions>
-                        <CardContent>
-                            <Typography variant="h6">Respostes ({p.answers?.length || 0})</Typography>
-                            <List>
-                            {(p.answers || []).map(answer => {
-                                const resAuthor: IUserInfo =  persons.find(f => f.email === answer.emailUser) as any;
-                                return (
-                                    <ListItem divider>
-                                        <ListItemAvatar >
-                                            <Tooltip title={resAuthor.nick || resAuthor.email} arrow>
-                                                <Avatar sx={{ width: 26, height: 26 }} src={resAuthor.avatar}></Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={answer.date.toString()} secondary={answer.text}/>
-
-                                    </ListItem>
-                                )
-                            })}
-                            </List>
-                        </CardContent>
-                        
-                    </Card>
-                    
-                    </Box>
+                    <Publication publicationIdAnswerProps={[publicationIdAnswer, setPublicationIdAnswer]} key={key} publicationId={id as any} openAnswerDialogProps={[openAnswerDialog, setOpenAnswerDialog]}></Publication>
                 )
             }) : null}
             
         </div>
-        <Dialog open={openAnswerDialog} onClose={handleCloseAnswerDialog}>
-                <DialogTitle>Crear una resposta</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Per crear una una resposta has d'introduir el contingut
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Resposta"
-                        multiline
-                        fullWidth
-                        minRows={5}
-                        variant="standard"
-                        onChange={e => setAnswer(e.currentTarget.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button color="error" onClick={handleCloseAnswerDialog}>Cancel·lar</Button>
-                    <Button disabled={!answer} color="success" onClick={e => answerPublication(answer, publicationIdAnswer)}>Crear resposta</Button>
-                </DialogActions>
-        </Dialog>
-        <Dialog open={openCreateMessageDialog} onClose={handleCloseCreatePublicationDialog}>
+        <AnswerDialog openAnswerDialogProps={[openAnswerDialog, setOpenAnswerDialog]} handleCloseAnswerDialog={handleCloseAnswerDialog} publicationIdAnswer={publicationIdAnswer}></AnswerDialog>
+        <NewPublicationDialog openCreateMessageDialog={openCreateMessageDialog} handleCloseCreatePublicationDialog={handleCloseCreatePublicationDialog}></NewPublicationDialog>
+    </div>)
+}
+
+interface INewPublicationDialog {
+    openCreateMessageDialog: boolean;
+    handleCloseCreatePublicationDialog: any;
+}
+
+function NewPublicationDialog(props: INewPublicationDialog){
+    const openCreateMessageDialog = props.openCreateMessageDialog;
+    const handleCloseCreatePublicationDialog = props.handleCloseCreatePublicationDialog;
+    const [publicationContent, setPublicationContent] = useState("");
+    const [publicationTitle, setPublicationTitle] = useState("");
+    const [publicationImage, setPublicationImage] = useState("");
+    const [imageName, setImageName] = useState("");
+
+    const handleImageChange = (e: any) => {
+        if(e.target.files){
+            setImageName(e.target.files[0]?.name);
+        }
+        else {
+            setImageName('');
+        }
+        setPublicationImage(e.target.files);
+    }
+
+    const handleCloseDialog = () => {
+        resetFields();
+        handleCloseCreatePublicationDialog();
+    }
+
+    const resetFields= () => {
+        setPublicationContent("");
+        setPublicationTitle("");
+        setPublicationImage("");
+        setImageName("")
+    }
+
+    return (
+        <Dialog open={openCreateMessageDialog} onClose={handleCloseCreatePublicationDialog} fullWidth>
                 <DialogTitle>Crear publicació</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Per crear una publicació has d'introduir el contingut
-                    </DialogContentText>
                     <TextField
                         autoFocus
                         margin="dense"
@@ -194,6 +129,7 @@ export default function Publications() {
                         fullWidth
                         variant="standard"
                         onChange={e => setPublicationTitle(e.currentTarget.value)}
+                        
                     />
                     <TextField
                         autoFocus
@@ -204,13 +140,63 @@ export default function Publications() {
                         minRows={5}
                         variant="standard"
                         onChange={e => setPublicationContent(e.currentTarget.value)}
+                        
                     />
+                    <Box sx={{display: "flex", gap: "20px", alignItems: "center"}}>
+                        <Box sx={{fontWeight: 500}}>{imageName}</Box>
+                        <label className="label-upload">
+                            <AttachmentIcon></AttachmentIcon>
+                            Afegir una imatge
+                            <input id="avatar-file-input" type="file" name="publicationImage" onChange={handleImageChange} accept="image/png,image/jpeg,image/jpg" />
+                        </label>
+                    </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button color="error" onClick={handleCloseCreatePublicationDialog}>Cancel·lar</Button>
-                    <Button disabled={!publicationContent || !publicationTitle} color="success" onClick={e => createPublication(publicationTitle, publicationContent)}>Crear publicació</Button>
+                    <Button variant="outlined" color="error" onClick={handleCloseDialog}>Cancel·lar</Button>
+                    <Button variant="contained" color="primary" onClick={e => createPublication(publicationTitle, publicationContent, publicationImage).then(r=> handleCloseDialog())}>Crear publicació</Button>
                 </DialogActions>
         </Dialog>
-    </div>)
+    );
 }
 
+interface IAnswerDialogProps {
+    openAnswerDialogProps: any;
+    handleCloseAnswerDialog: any;
+    publicationIdAnswer: string;
+}
+
+function AnswerDialog(props: IAnswerDialogProps){
+    const [openAnswerDialog, setOpenAnswerDialog] = props.openAnswerDialogProps; 
+    const handleCloseAnswerDialog = props.handleCloseAnswerDialog;
+    const publicationIdAnswer = props.publicationIdAnswer;
+
+    const answerPublicationHandler = (e: any) => {
+        answerPublication(answer, publicationIdAnswer).then(r => setOpenAnswerDialog(false));
+    }
+
+    const onCloseDialog = (e: any) => {
+        setAnswer("");
+        handleCloseAnswerDialog();
+    }
+
+    const [answer, setAnswer] = useState("");
+    return (<Dialog open={openAnswerDialog} onClose={handleCloseAnswerDialog} fullWidth>
+        <DialogTitle>Crear una resposta</DialogTitle>
+        <DialogContent>
+            <TextField
+                autoFocus
+                margin="dense"
+                label="Escriu la resposta"
+                multiline
+                fullWidth
+                minRows={5}
+                variant="standard"
+                onChange={e => setAnswer(e.currentTarget.value)}
+            />
+        </DialogContent>
+        <DialogActions>
+            <Button variant="outlined" color="error" onClick={onCloseDialog}>Cancel·lar</Button>
+            <Button variant="contained" color="primary" disabled={!answer} onClick={answerPublicationHandler}>Crear resposta</Button>
+        </DialogActions>
+</Dialog>);
+}
