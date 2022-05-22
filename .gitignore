@@ -29,4 +29,7 @@ yarn-error.log*
 
 .vscode
 
-/static
+/static/assets/avatars/*.png
+/static/assets/publications/*.png
+/static/assets/avatars/*.jpg
+/static/assets/publications/*.jpg
