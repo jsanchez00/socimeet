@@ -1,5 +1,5 @@
-import { CaseReducer, createSlice } from '@reduxjs/toolkit';
-import { IPublicationExtended } from '../../interfaces/publication';
+import { CaseReducer, createSlice } from "@reduxjs/toolkit";
+import { IPublicationExtended } from "../../interfaces/publication";
 
 interface ICurrentState {
   [id: string]: IPublicationExtended;
@@ -10,14 +10,14 @@ const initialState: ICurrentState = {};
 export const publicationsSlice = createSlice<
   ICurrentState,
   {
-    ['update']: CaseReducer<ICurrentState, any>;
-    ['add']: CaseReducer<ICurrentState, any>;
-    ['addAnswer']: CaseReducer<ICurrentState, any>;
-    ['addReaction']: CaseReducer<ICurrentState, any>;
-    ['removeReaction']: CaseReducer<ICurrentState, any>;
+    ["update"]: CaseReducer<ICurrentState, any>;
+    ["add"]: CaseReducer<ICurrentState, any>;
+    ["addAnswer"]: CaseReducer<ICurrentState, any>;
+    ["addReaction"]: CaseReducer<ICurrentState, any>;
+    ["removeReaction"]: CaseReducer<ICurrentState, any>;
   }
 >({
-  name: 'publications',
+  name: "publications",
   initialState,
   reducers: {
     update: (state, action) => {
@@ -45,14 +45,18 @@ export const publicationsSlice = createSlice<
     addReaction: (state, action) => {
       const id = action.payload.publicationId;
       if (!state[id]?.likes) {
-        state[id].answers = [];
+        state[id].likes = [];
       }
       state[id].likes.push(action.payload);
       return state;
     },
     removeReaction: (state, action) => {
       const id = action.payload.publicationId;
-      const idxToRemove = state[id].likes.findIndex((l) => l.type === action.payload.type && l.emailUser === action.payload.emailUser);
+      const idxToRemove = state[id].likes.findIndex(
+        (l) =>
+          l.type === action.payload.type &&
+          l.emailUser === action.payload.emailUser
+      );
       state[id].likes.splice(idxToRemove, 1);
       return state;
     },
@@ -60,6 +64,7 @@ export const publicationsSlice = createSlice<
 });
 
 // Action creators are generated for each case reducer function
-export const { update, add, addAnswer, addReaction, removeReaction } = publicationsSlice.actions;
+export const { update, add, addAnswer, addReaction, removeReaction } =
+  publicationsSlice.actions;
 
 export default publicationsSlice.reducer;
