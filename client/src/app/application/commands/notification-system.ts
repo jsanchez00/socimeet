@@ -1,26 +1,30 @@
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export const notificationSystem = {
   error: (message: string) =>
     toast.error(message, {
-      position: 'bottom-center',
-      duration: 5000,
-      icon: null,
+      ...notificationOpts,
       style: {
-        background: '#F53636',
-        color: 'white',
-        fontWeight: '600',
+        background: "#F53636",
+        ...notificationOpts.style,
       },
-    }),
+    } as any),
   success: (message: string) =>
     toast.success(message, {
-      position: 'bottom-center',
-      duration: 5000,
-      icon: null,
+      ...notificationOpts,
       style: {
-        background: '#00BF13',
-        color: 'white',
-        fontWeight: '600',
+        background: "#00BF13",
+        ...notificationOpts.style,
       },
-    }),
+    } as any),
+};
+
+const notificationOpts = {
+  position: "bottom-center",
+  duration: 5000,
+  icon: null,
+  style: {
+    color: "white",
+    fontWeight: "600",
+  },
 };
